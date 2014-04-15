@@ -72,7 +72,7 @@ exports.getTopic = function(id) {
 	sql    += 'FROM topics INNER JOIN replies ON topics.id=replies.topic ';
 	sql    += 'INNER JOIN users ON users.id=replies.username ';
 	sql    += 'WHERE topics.id=$1 ';
-	sql    += 'ORDER BY replies.id DESC';
+	sql    += 'ORDER BY replies.id ASC';
 
 	var promise = db.sql(sql, [id])
 	.then(function(results) {
