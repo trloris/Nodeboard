@@ -1,0 +1,6 @@
+block content
+    form(name="newtopic", action="", method="post")
+        input(type="hidden", name="_csrf", value=token)
+        input(type="text", name="title")
+        textarea(name="message", cols"40", rows="5")
+        input(type="submit", value="Create Topic")

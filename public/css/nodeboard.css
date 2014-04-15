@@ -1,0 +1,42 @@
+body {
+	background: #FFFFFF;
+	color: #000000;
+	font-family: "Arial", san-serif;
+	font-size: 9pt;
+}
+
+div.navbar {
+	overflow: hidden;
+	margin-top: 0px;
+	margin-bottom: 10px;
+	background: #6666FF;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nav-left {
+	float: left;
+}
+
+.nav-right {
+	float: right;
+}
+
+.nav li {
+	display: inline;
+}
+
+ul.nav {
+	padding: 5px;
+}
+.nav a {
+	padding: 10px;
+	font-weight: bold;
+	font-size: 12pt;
+	color: #FFFFFF;
+	text-decoration: none;
+}

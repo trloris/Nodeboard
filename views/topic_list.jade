@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    table(class="topic-list")
+        tr
+            th Topic
+            th Poster
+            th Messages
+            th Last Post
+    each result in results
+        tr
+            td= result['title']

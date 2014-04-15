@@ -1,0 +1,6 @@
+extends layout
+
+block content
+    div= topicContents.title
+    each message in topicContents.messages
+        li= message.message
