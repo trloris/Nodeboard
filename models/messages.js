@@ -3,6 +3,23 @@ var conString = 'postgres://localhost/nodeboard';
 var Q = require('Q');
 var db = require('./database');
 
+// Format time with leading 0 in hours/minutes
+var timeFormat = function(num) {
+	if (num < 10) {
+		return "0" + num;
+	} else {
+		return num + "";
+	}
+};
+
+// Format date to readable format
+var dateFormat = function(d) {
+	var formattedDate = d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear();
+	formattedDate    += ' ' + timeFormat(d.getHours()) + ':' + timeFormat(d.getMinutes());
+
+	return formattedDate;
+};
+
 var newReply = function(user, message, topic) {
 	var sql = 'INSERT INTO replies (username, message, topic) ';
 	sql    += 'VALUES ($1, $2, $3)';
@@ -35,13 +52,6 @@ exports.newTopic = function(user, title, message) {
 }
 
 exports.getPage = function(page) {
-	var timeFormat = function(num) {
-		if (num < 10) {
-			return "0" + num;
-		} else {
-			return num + "";
-		}
-	};
 
 	var offset = 50 * (page - 1);
 	var sql = 'SELECT topics.id, title, users.username, last_post_time '
@@ -53,13 +63,11 @@ exports.getPage = function(page) {
 		var topics = [];
 		for (var i = 0; i < results.rows.length; i++) {
 			var d = new Date(results.rows[i].last_post_time);
-			var formattedDate = d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear();
-			formattedDate    += ' ' + timeFormat(d.getHours()) + ':' + timeFormat(d.getMinutes());
 
 			topics.push({ id: results.rows[i].id,
 						  title: results.rows[i].title,
 			              username: results.rows[i].username,
-			              lastPostTime: formattedDate });
+			              lastPostTime: dateFormat(d) });
 		}
 
 		return topics;
@@ -68,7 +76,7 @@ exports.getPage = function(page) {
 }
 
 exports.getTopic = function(id) {
-	var sql = 'SELECT replies.username, title, message, create_time ';
+	var sql = 'SELECT users.username, title, message, create_time ';
 	sql    += 'FROM topics INNER JOIN replies ON topics.id=replies.topic ';
 	sql    += 'INNER JOIN users ON users.id=replies.username ';
 	sql    += 'WHERE topics.id=$1 ';
@@ -77,11 +85,12 @@ exports.getTopic = function(id) {
 	var promise = db.sql(sql, [id])
 	.then(function(results) {
 		console.log(results);
-		var topicContents = { title: results.rows[0].title, messages: [] };
+		var topicContents = { id: id, title: results.rows[0].title, messages: [] };
 		for (var i = 0; i < results.rows.length; i++) {
+			var d = new Date(results.rows[i].create_time);
 			topicContents.messages.push({ message: results.rows[i].message,
-							      username: results.rows[i].username,
-							      createTime: results.rows[i].create_time });
+							    		  username: results.rows[i].username,
+							    		  createTime: dateFormat(d) });
 		}
 
 		return topicContents;

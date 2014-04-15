@@ -46,3 +46,11 @@ table.topic-list {
 	border: hidden;
 	border-collapse: collapse;
 }
+
+div.message-header {
+	background: #B0B0FF;
+}
+
+div.message {
+	background: #D0D0FF;
+}

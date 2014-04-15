@@ -1,6 +1,8 @@
 extends layout
 
 block content
-    div= topicContents.title
+    h1= topicContents.title
     each message in topicContents.messages
-        li= message.message
+        div(class="message-header") From: #{message.username} | Posted: #{message.createTime}
+        div(class="message")= message.message
+    a(href="/reply/#{topicContents.id}") Reply
