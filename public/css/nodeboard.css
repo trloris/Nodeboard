@@ -12,7 +12,7 @@ div.navbar {
 	background: #6666FF;
 }
 
-ul {
+.navbar ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -53,4 +53,14 @@ div.message-header {
 
 div.message {
 	background: #D0D0FF;
+}
+
+.topic-list th {
+	background: #8080FF;
+	color: #FFFFFF;
+}
+
+.topic-list td {
+	background: #D0D0FF;
+	border: 2px solid #FFFFFF;
 }

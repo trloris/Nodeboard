@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS topics(
 CREATE TABLE IF NOT EXISTS replies(
 	id			serial NOT NULL PRIMARY KEY,
 	topic   	int REFERENCES topics(id),
-	message 	varchar(1000),
+	message 	varchar(20000),
 	create_time timestamp WITH TIME ZONE NOT NULL DEFAULT NOW(),
 	username	int REFERENCES users(id)
 );
