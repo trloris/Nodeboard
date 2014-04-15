@@ -3,35 +3,6 @@ var conString = 'postgres://localhost/nodeboard';
 var Q = require('Q');
 var db = require('./database');
 
-// var runSql2 = function(sql, parameters) {
-// 	pg.connect(conString, function (err, client, done)
-// }
-
-// var connect = function (conString) {
-// 	return Q.ninvoke(pg, connect);
-// };
-
-// var query = function (sql, client, parameters) {
-// 	return Q.ninvoke(client, sql, parameters);
-// };
-
-// exports.getTopic = function(id) {
-// 	var sql =  'SELECT * FROM topics ';
-// 	sql += 'INNER JOIN replies ON topics.id=replies.topic ';
-// 	sql += 'WHERE topics.id=$1';
-// 	var promise = Q.nfcall(runSql, sql, [id])
-// 	.then(function(result) {
-// 		var topic = { id: result.rows[0].topic, title: result.rows[0].title, messages: [] };
-// 		for (var i = 0; i < result.rows.length; i++) {
-// 			topic.messages.push({ id: result.rows[i].id, message: result.rows[i].message });
-// 		}
-
-// 		return topic;
-// 	});
-
-// 	return promise;
-// }
-
 var newReply = function(user, message, topic) {
 	var sql = 'INSERT INTO replies (username, message, topic) ';
 	sql    += 'VALUES ($1, $2, $3)';
@@ -59,21 +30,40 @@ exports.newTopic = function(user, title, message) {
 
 		return results.rows[0].id;
 	});
-	// .then(function(results) {
-	// 	var id = results.rows[0].id;
-	// 	var sql = 'INSERT INTO replies (topic, message, username) ';
-	// 	sql    += 'VALUES ($1, $2, $3)';
-	// 	db.sql(sql, [id, message, user]);
-	// });
 
 	return promise;
 }
 
 exports.getPage = function(page) {
+	var timeFormat = function(num) {
+		if (num < 10) {
+			return "0" + num;
+		} else {
+			return num + "";
+		}
+	};
+
 	var offset = 50 * (page - 1);
-	var sql = 'SELECT * FROM topics ORDER BY last_post_time DESC LIMIT 50 OFFSET $1';
+	var sql = 'SELECT topics.id, title, users.username, last_post_time '
+	sql    += 'FROM topics INNER JOIN users ON users.id = topics.username '
+	sql    += 'ORDER BY last_post_time DESC LIMIT 50 OFFSET $1';
 	
-	var promise = db.sql(sql, [offset]);
+	var promise = db.sql(sql, [offset])
+	.then(function(results) {
+		var topics = [];
+		for (var i = 0; i < results.rows.length; i++) {
+			var d = new Date(results.rows[i].last_post_time);
+			var formattedDate = d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear();
+			formattedDate    += ' ' + timeFormat(d.getHours()) + ':' + timeFormat(d.getMinutes());
+
+			topics.push({ id: results.rows[i].id,
+						  title: results.rows[i].title,
+			              username: results.rows[i].username,
+			              lastPostTime: formattedDate });
+		}
+
+		return topics;
+	});
 	return promise;
 }
 

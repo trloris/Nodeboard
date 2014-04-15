@@ -40,3 +40,9 @@ ul.nav {
 	color: #FFFFFF;
 	text-decoration: none;
 }
+
+table.topic-list {
+	width: 100%;
+	border: hidden;
+	border-collapse: collapse;
+}

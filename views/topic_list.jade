@@ -7,6 +7,10 @@ block content
             th Poster
             th Messages
             th Last Post
-    each result in results
-        tr
-            td= result['title']
+        each topic in topics
+            tr
+                td
+                    a(href="/topic/#{topic.id}")= topic.title
+                td= topic.username
+                td 0
+                td= topic.lastPostTime
