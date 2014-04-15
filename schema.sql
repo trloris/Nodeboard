@@ -19,3 +19,5 @@ CREATE TABLE IF NOT EXISTS replies(
 	create_time timestamp WITH TIME ZONE NOT NULL DEFAULT NOW(),
 	username	int REFERENCES users(id)
 );
+
+CREATE UNIQUE INDEX username_unqiue_index ON users(LOWER(username));
