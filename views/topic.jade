@@ -10,5 +10,5 @@ block content
     script(src="/js/nodeboard.js")
     script(type="text/javascript").
         window.onload = function() {
-            getReplies(#{topicContents.id}, 1, '#{token}');
+            getReplies(#{topicContents.id}, 1);
         };
