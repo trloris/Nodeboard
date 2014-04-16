@@ -65,7 +65,6 @@ exports.getPage = function(page) {
 
 	var promise = db.sql(sql, [offset])
 	.then(function(results) {
-		console.log(results);
 		var topics = [];
 		for (var i = 0; i < results.rows.length; i++) {
 			var d = new Date(results.rows[i].last_post_time);
