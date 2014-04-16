@@ -12,6 +12,6 @@ block content
                 td
                     a(href="/topic/#{topic.id}")= topic.title
                 td= topic.username
-                td 0
+                td= topic.count
                 td= topic.lastPostTime
     a(href="/newtopic") New Topic
