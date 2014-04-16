@@ -4,9 +4,13 @@
 	"description": "Simple message board in Node.js",
 	"dependencies": {
 		"bcrypt": "0.7.x",
-		"express": "3.5.x",
+		"express": "4.0.x",
 		"jade": "1.3.x",
 		"pg": "2.11.x",
-		"q": "1.0.x"
+		"q": "1.0.x",
+		"body-parser": "1.0.x",
+		"cookie-parser": "1.0.x",
+		"express-session": "1.0.x",
+		"csurf": "1.1.x"
 	}
 }
