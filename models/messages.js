@@ -24,16 +24,18 @@ var newReply = function(user, message, topic) {
 	var sql = 'INSERT INTO replies (username, message, topic) ';
 	sql    += 'VALUES ($1, $2, $3)';
 	var promise = db.sql(sql, [user, message, topic])
-	.then(function() {
+	.then(function(results) {
 		var sql = 'UPDATE topics ';
 		sql    += 'SET last_post_time=now() ';
 		sql    += 'WHERE id=$1';
 
 		db.sql(sql, [topic]);
+
+		return { topic: topic };
 	});
 
 	return promise;
-}
+};
 
 exports.newReply = newReply;
 
@@ -49,7 +51,7 @@ exports.newTopic = function(user, title, message) {
 	});
 
 	return promise;
-}
+};
 
 exports.getPage = function(page) {
 
@@ -78,7 +80,7 @@ exports.getPage = function(page) {
 		return topics;
 	});
 	return promise;
-}
+};
 
 exports.getTopic = function(id) {
 	var sql = 'SELECT users.username, title, message, create_time ';
@@ -89,7 +91,6 @@ exports.getTopic = function(id) {
 
 	var promise = db.sql(sql, [id])
 	.then(function(results) {
-		console.log(results);
 		var topicContents = { id: id, title: results.rows[0].title, messages: [] };
 		for (var i = 0; i < results.rows.length; i++) {
 			var d = new Date(results.rows[i].create_time);
@@ -102,4 +103,27 @@ exports.getTopic = function(id) {
 	});
 
 	return promise;
-}
+};
+
+exports.getNewReplies = function(topicID, replyID) {
+	var sql = 'SELECT users.username, message, create_time, replies.id ';
+	sql    += 'FROM replies INNER JOIN users on replies.username=users.id ';
+	sql    += 'WHERE topic=$1 AND replies.id>$2';
+
+	var promise = db.sql(sql, [topicID, replyID])
+	.then(function(results) {
+		var replies = [];
+		for (var i = 0; i < results.rows.length; i++) {
+			var d = new Date(results.rows[i].create_time);
+
+			replies.push({ id: results.rows[i].id,
+						   username: results.rows[i].username,
+						   message: results.rows[i].message,
+						   createTime: dateFormat(d) });
+		}
+
+		return replies;
+	});
+
+	return promise;
+};
