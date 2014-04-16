@@ -82,7 +82,7 @@ exports.getPage = function(page) {
 };
 
 exports.getTopic = function(id) {
-	var sql = 'SELECT users.username, title, message, create_time ';
+	var sql = 'SELECT users.username, title, message, create_time, replies.id ';
 	sql    += 'FROM topics INNER JOIN replies ON topics.id=replies.topic ';
 	sql    += 'INNER JOIN users ON users.id=replies.username ';
 	sql    += 'WHERE topics.id=$1 ';
@@ -93,7 +93,8 @@ exports.getTopic = function(id) {
 		var topicContents = { id: id, title: results.rows[0].title, messages: [] };
 		for (var i = 0; i < results.rows.length; i++) {
 			var d = new Date(results.rows[i].create_time);
-			topicContents.messages.push({ message: results.rows[i].message,
+			topicContents.messages.push({ id: results.rows[i].id,
+										  message: results.rows[i].message,
 							    		  username: results.rows[i].username,
 							    		  createTime: dateFormat(d) });
 		}
