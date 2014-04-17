@@ -1,7 +1,6 @@
 var getReplies = function(topicID, replyID) {
     var req = new XMLHttpRequest();
-    req.open("POST", "/newreplies/topic/" + topicID + "/reply/" + replyID);
-    req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    req.open("GET", "/newreplies/topic/" + topicID + "/reply/" + replyID);
     req.onload = function() {
         if (req.status == 408) {
             getReplies(topicID, replyID);
